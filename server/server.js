@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
 const db = require('./config/connection');
-const routes = require('./routes'); //dont think I will need these
+//const routes = require('./routes'); 
+//dont think I will need these
 
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4')
@@ -15,7 +16,8 @@ const PORT = process.env.PORT || 3001;
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  introspection: true
 });
 
 const startApolloServer = async () => {
@@ -49,6 +51,7 @@ startApolloServer();
 
 
 
-app.use(routes); //Dont think I will need this
+//app.use(routes); 
+//Dont think I will need this
 
 
