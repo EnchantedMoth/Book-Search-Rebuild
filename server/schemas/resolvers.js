@@ -3,21 +3,24 @@ const { signToken, AuthenticationError } = require('../utils/auth')
 
 const resolvers = {
     Query: {
-        me: async (parent, args, context) => {
-            if (context.user) {
-              return Profile.findOne({ _id: context.user._id });
+        me: async (parent, { userId }) => {
+          const user = await User.findOne({
+            _id: userId,
+          }).populate("savedBooks");
+            if (!user) {
+              throw new AuthenticationError("User not found");
             }
-            throw AuthenticationError;
+            return user;
           },
     },
 
     Mutation: {
-        createUser: async (parent, { username, email, password }) => {
+          createUser: async (parent, { username, email, password }) => {
             const user = await User.create({ username, email, password });
             const token = signToken(user);
             return { token, user };
           },
-          login: async (parent, { username, email, password }) => {
+          login: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
       
             if (!user) {
